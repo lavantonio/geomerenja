@@ -1,0 +1,154 @@
+.surveyor-animation {
+  width: 285px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.surveyor-animation:hover {
+  transform: scale(1.02);
+}
+
+.surveyor-animation svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* =========================================
+   SVE JE KONTURA
+========================================= */
+
+.surveyor-animation svg * {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* =========================================
+   ZRACI
+========================================= */
+
+.beam {
+  stroke-dasharray: 10 7;
+  stroke-width: 1.4 !important;
+  opacity: 0.75;
+}
+
+.beam-out {
+  animation: beamToPrism 2.5s linear infinite;
+}
+
+.beam-back {
+  animation: beamToTheodolite 2.5s linear infinite;
+  animation-delay: 1.25s;
+}
+
+@keyframes beamToPrism {
+  from {
+    stroke-dashoffset: 160;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes beamToTheodolite {
+  from {
+    stroke-dashoffset: -160;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* =========================================
+   NORMALNO JE VIDILJIV SAMO GEODETA KOJI MERI
+========================================= */
+
+.surveyor-measuring {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.surveyor-waving {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* =========================================
+   KADA KRENE MAHANJE
+========================================= */
+
+.is-waving .surveyor-measuring {
+  opacity: 0;
+}
+
+.is-waving .surveyor-waving {
+  opacity: 1;
+}
+
+/* =========================================
+   MAHANJE
+========================================= */
+
+.wave-arm {
+  transform-origin: 463px 76px;
+}
+
+.is-waving .wave-arm {
+  animation: waveHand 0.5s ease-in-out 5;
+}
+
+@keyframes waveHand {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-18deg);
+  }
+
+  50% {
+    transform: rotate(20deg);
+  }
+
+  75% {
+    transform: rotate(-18deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* =========================================
+   MOBILNI
+========================================= */
+
+@media (max-width: 900px) {
+  .surveyor-animation {
+    width: 180px;
+    height: 72px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .beam,
+  .is-waving .wave-arm {
+    animation: none;
+  }
+}
