@@ -1,17 +1,28 @@
+/* ==========================================================
+   ANIMACIJA GEODETE
+   ========================================================== */
 .surveyor-animation {
   width: 285px;
   height: 105px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex-shrink: 1; /* Dozvoljava sakupljanje na uskim ekranima */
+  min-width: 95px; /* Dozvoljava da se smanji dovoljno za ultra-uske telefone */
   cursor: pointer;
   user-select: none;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  outline: none;
 }
 
 .surveyor-animation:hover {
   transform: scale(1.02);
+}
+
+.surveyor-animation:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .surveyor-animation svg {
@@ -20,26 +31,21 @@
   overflow: visible;
 }
 
-/* =========================================
-   SVE JE KONTURA
-========================================= */
-
+/* Globalni stil linija */
 .surveyor-animation svg * {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: opacity 0.3s ease, stroke 0.2s ease;
 }
 
-/* =========================================
-   ZRACI
-========================================= */
-
+/* Animacija zraka */
 .beam {
   stroke-dasharray: 10 7;
   stroke-width: 1.4 !important;
-  opacity: 0.75;
+  opacity: 0.6;
 }
 
 .beam-out {
@@ -52,103 +58,93 @@
 }
 
 @keyframes beamToPrism {
-  from {
-    stroke-dashoffset: 160;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-  }
+  from { stroke-dashoffset: 160; }
+  to { stroke-dashoffset: 0; }
 }
 
 @keyframes beamToTheodolite {
-  from {
-    stroke-dashoffset: -160;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-  }
+  from { stroke-dashoffset: -160; }
+  to { stroke-dashoffset: 0; }
 }
 
-/* =========================================
-   NORMALNO JE VIDILJIV SAMO GEODETA KOJI MERI
-========================================= */
+/* Sakrivanje zraka dok geodeta maše */
+.is-waving .laser-beams {
+  opacity: 0;
+  pointer-events: none;
+}
 
+/* Smena poza */
 .surveyor-measuring {
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
 .surveyor-waving {
   opacity: 0;
-  transition: opacity 0.2s ease;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
-
-/* =========================================
-   KADA KRENE MAHANJE
-========================================= */
 
 .is-waving .surveyor-measuring {
   opacity: 0;
+  pointer-events: none;
 }
 
 .is-waving .surveyor-waving {
   opacity: 1;
+  pointer-events: auto;
 }
 
-/* =========================================
-   MAHANJE
-========================================= */
-
-.wave-arm {
+/* ANIMACIJA RUKE */
+.wave-arm-group {
   transform-origin: 463px 76px;
+  transform-box: user-space-on-use;
 }
 
-.is-waving .wave-arm {
-  animation: waveHand 0.5s ease-in-out 5;
+.is-waving .wave-arm-group {
+  animation: waveHand 0.45s ease-in-out infinite alternate;
 }
 
 @keyframes waveHand {
   0% {
     transform: rotate(0deg);
   }
-
-  25% {
-    transform: rotate(-18deg);
-  }
-
-  50% {
-    transform: rotate(20deg);
-  }
-
-  75% {
-    transform: rotate(-18deg);
-  }
-
   100% {
-    transform: rotate(0deg);
+    transform: rotate(-32deg);
   }
 }
 
-/* =========================================
-   MOBILNI
-========================================= */
-
+/* ==========================================================
+   RESPONZIVNOST ZA UŠTIDU PROSTORA U JEDNOM REDU
+   ========================================================== */
 @media (max-width: 900px) {
   .surveyor-animation {
-    width: 180px;
-    height: 72px;
+    width: 200px;
+    height: 75px;
   }
 }
 
-/* =========================================
-   REDUCED MOTION
-========================================= */
+@media (max-width: 480px) {
+  .surveyor-animation {
+    width: 150px;
+    height: 55px;
+  }
+}
 
+@media (max-width: 377px) {
+  .surveyor-animation {
+    width: 110px; /* Smanjeno da sigurno stane u red na telefonima užim od 377px */
+    height: 42px;
+  }
+}
+
+/* Pristupačnost - Smanjene animacije */
 @media (prefers-reduced-motion: reduce) {
   .beam,
-  .is-waving .wave-arm {
-    animation: none;
+  .is-waving .wave-arm-group {
+    animation: none !important;
+  }
+  .beam {
+    stroke-dashoffset: 0 !important;
   }
 }
